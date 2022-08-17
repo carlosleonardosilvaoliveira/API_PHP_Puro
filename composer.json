@@ -1,0 +1,17 @@
+{
+  "name": "vendor_name/api_pure_php",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Leonardo",
+      "email": "email@example.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+        "App\\": "App/"
+    }
+  }
+}
