@@ -15,7 +15,7 @@ class Database
     private $table;
     private $connection;
 
-    public static function config ($host, $name, $user, $pass)
+    public static function config($host, $name, $user, $pass)
     {
         self::$host = $host;
         self::$name = $name;
@@ -23,70 +23,70 @@ class Database
         self::$pass = $pass;
     }
 
-    public function __construct ($table = null)
+    public function __construct($table = null)
     {
         $this->table = $table;
         $this->setConnection();
     }
 
-    private function setConnection ()
+    private function setConnection()
     {
         try {
             $this->connection = new PDO("sqlsrv:Server=".self::$host.";Database=".self::$name.";ConnectionPooling=0", self::$user, self::$pass);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             die('ERROR: '.$e->getMessage());
         }
     }
 
-    public function execute ($query, $params = [])
+    public function execute($query, $params = [])
     {
         try {
             $statement = $this->connection->prepare($query);
             $statement->execute($params);
             return $statement;
-        } catch (PDOException $e) {
+        } catch(PDOException $e) {
             die('ERROR: '.$e->getMessage());
         }
     }
 
-    public function insert ($values)
+    public function insert($values)
     {
         $fields = array_keys($values);
-        $binds  = array_pad([], count($fields), '?');
+        $binds = array_pad([], count($fields), '?');
 
-        $query  = 'INSERT INTO '.$this->table.' ('.implode(',', $fields).') VALUES ('.implode(',', $binds).')';
+        $query = 'INSERT INTO '.$this->table.' ('.implode(',', $fields).') VALUES ('.implode(',', $binds).')';
 
         $this->execute($query, array_values($values));
 
         return $this->connection->lastInsertId();
     }
 
-    public function select ($where = null, $order = null, $limit = null, $fields = '*')
+    public function select($where = null, $order = null, $limit = null, $fields = '*')
     {
-        $where  = strlen($where) ? "WHERE ".$where : "";
-        $limit  = strlen($limit) ? "OFFSET ".$limit : "";
-        $order  = strlen($order) ? "ORDER BY ".$order : "";
+        $where = strlen($where) ? "WHERE ".$where : "";
+        $limit = strlen($limit) ? "OFFSET ".$limit : "";
+        $order = strlen($order) ? "ORDER BY ".$order : "";
 
-        $query  = "SELECT ".$fields." FROM ".$this->table." ".$where." ".$order." ".$limit;
+        $query = "SELECT ".$fields." FROM ".$this->table." ".$where." ".$order." ".$limit;
 
         return $this->execute($query);
     }
 
-    public function update ($where, $values)
+    public function update($where, $values)
     {
         $fields = array_keys($values);
 
-        $query  = 'UPDATE '.$this->table.' SET '.implode('=?',$fields).'=? WHERE '.$where;
+        $query = 'UPDATE '.$this->table.' SET '.implode('=?,',$fields).'=? WHERE '.$where;
 
         $this->execute($query, array_values($values));
 
         return true;
     }
 
-    public function delete ($where)
+    public function delete($where)
     {
-        $query  = 'DELETE FROM '.$this->table.' WHERE '.$where;
+        $query = 'DELETE FROM '.$this->table.' WHERE '.$where;
 
         $this->execute($query);
 

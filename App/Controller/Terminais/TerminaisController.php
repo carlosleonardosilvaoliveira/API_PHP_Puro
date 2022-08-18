@@ -55,4 +55,71 @@ class TerminaisController
 
         return json_encode($terminalArray);
     }
+
+    public static function postInsert ($request)
+    {
+        $terminalArray = array();
+        $terminalArray["body"] = array();
+
+        $results = new EntityTerminais();
+
+        $getParams = $request->getQueryParams();
+
+        $results->n_terminal    = $getParams['n_terminal'] ?? '';
+        $results->ponto         = $getParams['ponto'] ?? '';
+        $results->uf            = $getParams['uf'] ?? '';
+        $results->tipo          = $getParams['tipo'] ?? '';
+        $results->marca         = $getParams['marca'] ?? '';
+        $results->modelo        = $getParams['modelo'] ?? '';
+        $results->n_serie       = $getParams['n_serie'] ?? '';
+        $results->ip            = $getParams['ip'] ?? '';
+        $results->h_operacional = $getParams['h_operacional'] ?? '';
+        $results->status        = $getParams['status'] ?? '';
+        $results->postInsert();
+
+        $e = array(
+            'n_terminal'    => $results->n_terminal,
+            'ponto'         => $results->ponto,
+            'uf'            => $results->uf,
+            'tipo'          => $results->tipo,
+            'marca'         => $results->marca,
+            'modelo'        => $results->modelo,
+            'n_serie'       => $results->n_serie,
+            'ip'            => $results->ip,
+            'h_operacional' => $results->h_operacional,
+            'status'        => $results->status
+        );
+
+        array_push($terminalArray["body"], $e);
+
+        return json_encode($terminalArray);
+    }
+
+    public static function putUpdate ($request, $n_terminal)
+    {
+        $terminalArray = array();
+        $terminalArray["body"] = array();
+
+        $results = EntityTerminais::getTerminaisByNumero($n_terminal);
+
+        //$data = json_decode(file_get_contents("php://input"));
+        //$results->email = $data->email ?? '';
+        //$results->obs   = $data->obs ?? '';
+
+        $getParams = $request->getQueryParams();
+
+        $results->email = $getParams['email'] ?? '';
+        $results->obs   = $getParams['obs'] ?? '';
+        $results->putUpdate();
+
+        $e = array(
+            'n_terminal'    => $results->n_terminal,
+            'email'         => $results->email,
+            'obs'           => $results->obs
+        );
+
+        array_push($terminalArray["body"], $e);
+
+        return json_encode($terminalArray);
+    }
 }

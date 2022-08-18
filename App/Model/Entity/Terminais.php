@@ -36,4 +36,31 @@ class Terminais
     {
         return self::getTerminais("n_terminal = '{$n_terminal}'")->fetchObject(self::class);
     }
+
+    public function postInsert ()
+    {
+
+        $this->id = (new Database('terminais'))->insert([
+            'n_terminal'    => $this->n_terminal,
+            'ponto'         => $this->ponto,
+            'uf'            => $this->uf,
+            'tipo'          => $this->tipo,
+            'marca'         => $this->marca,
+            'modelo'        => $this->modelo,
+            'n_serie'       => $this->n_serie,
+            'ip'            => $this->ip,
+            'h_operacional' => $this->h_operacional,
+            'status'        => $this->status
+        ]);
+
+        return true;
+    }
+
+    public function putUpdate ()
+    {
+        return (new Database('terminais'))->update("n_terminal = '{$this->n_terminal}'",[
+            'email' => $this->email,
+            'obs'   => $this->obs
+        ]);
+    }
 }
